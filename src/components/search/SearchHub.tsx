@@ -15,8 +15,12 @@ import {
   Database,
   Building,
   Fingerprint,
+  Sparkles,
+  Zap,
+  AlertTriangle,
 } from 'lucide-react';
 import type { SearchQuery, Dossier } from '../../types/dossier';
+import type { InvestigationReport } from '../../osint/types/report';
 import { BiometricFaceScanner } from './BiometricFaceScanner';
 import { sound } from '../../utils/sound';
 import {
@@ -42,17 +46,25 @@ import {
 import { detectCryptoAddress, fetchLiveCryptoBalance, type CryptoValidationResult } from '../../utils/osint/cryptoIntelligence';
 import { huntUsernameFootprint, type SocialPlatformResult } from '../../utils/osint/socialHunter';
 import { OFFICIAL_REGISTRIES_DATABASE } from '../../utils/osint/registryLinks';
-import { createVerifiedDossierFromQuery, loadAllCases, setActiveCaseId } from '../../utils/caseStorage';
+import { loadAllCases, setActiveCaseId } from '../../utils/caseStorage';
 
 interface SearchHubProps {
-  onSearch: (query: SearchQuery) => void;
+  onSearch: (query: SearchQuery) => void | Promise<void>;
   onSelectPreset: (dossier: Dossier) => void;
+  onFreeTextSearch?: (input: string, profile?: string) => void | Promise<void>;
+  liveProgress?: string;
+  investigationError?: string | null;
+  liveReport?: InvestigationReport | null;
 }
 
 type VectorTab = 'fio' | 'phone' | 'docs' | 'auto' | 'net' | 'user' | 'face';
 
-export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }) => {
+export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset, onFreeTextSearch, liveProgress, investigationError, liveReport }) => {
   const [activeVector, setActiveVector] = useState<VectorTab>('fio');
+
+  // Unified free-text search (engine)
+  const [unifiedInput, setUnifiedInput] = useState('Соколов Михаил Андреевич, +7 916 402-91-88, 7707083893, sberbank.ru');
+  const [unifiedProfile, setUnifiedProfile] = useState<string>('full-spectrum');
 
   // Vector 1: FIO State
   const [fio, setFio] = useState('');
@@ -65,7 +77,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
 
   // Vector 3: Docs State
   const [docType, setDocType] = useState<'inn' | 'snils' | 'passport' | 'ogrn' | 'bik'>('inn');
-  const [docInput, setDocInput] = useState('770408192039');
+  const [docInput, setDocInput] = useState('7707083893');
   const [docValidation, setDocValidation] = useState<ValidationResult | null>(null);
 
   // Vector 4: Auto State
@@ -75,7 +87,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
 
   // Vector 5: Network / IP / DNS / Crypto State
   const [netTab, setNetTab] = useState<'ip' | 'dns' | 'email' | 'crypto' | 'hash'>('ip');
-  const [ipInput, setIpInput] = useState('185.220.101.5');
+  const [ipInput, setIpInput] = useState('8.8.8.8');
   const [ipResult, setIpResult] = useState<IpIntelligence | null>(null);
   const [isIpLoading, setIsIpLoading] = useState(false);
 
@@ -222,11 +234,37 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
     sound.playSuccessChime();
   };
 
-  // Create Verified Dossier from Current View
+  // Unified engine search — главный путь для реальных данных
+  const handleUnifiedSearch = () => {
+    sound.playSuccessChime();
+    if (onFreeTextSearch) {
+      void onFreeTextSearch(unifiedInput, unifiedProfile);
+    } else {
+      void onSearch({ fio: unifiedInput, depth: unifiedProfile === 'person-fast' ? 'FAST' : unifiedProfile === 'person-deep' ? 'DARKNET_FULL' : 'DEEP_TOTEM' });
+    }
+  };
+
+  // Legacy quick dossier creation — теперь тоже через движок
   const handleCreateDossier = () => {
     sound.playSuccessChime();
-
-    const created = createVerifiedDossierFromQuery({
+    const aggregated = [
+      fio.trim(),
+      birthDate.trim(),
+      phoneInput.trim(),
+      docType === 'inn' ? docInput : '',
+      docType === 'snils' ? docInput : '',
+      docType === 'passport' ? docInput : '',
+      autoInput.trim(),
+      emailInput.trim(),
+      usernameInput.trim(),
+    ]
+      .filter(Boolean)
+      .join(', ');
+    if (onFreeTextSearch && aggregated) {
+      void onFreeTextSearch(aggregated, 'full-spectrum');
+      return;
+    }
+    void onSearch({
       fio: fio.trim() || undefined,
       birthDate: birthDate.trim() || undefined,
       phone: phoneInput.trim() || undefined,
@@ -234,12 +272,10 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
       snils: docType === 'snils' ? docInput : undefined,
       passport: docType === 'passport' ? docInput : undefined,
       carPlate: autoType === 'plate' ? autoInput : undefined,
-      vin: autoType === 'vin' ? autoInput : undefined,
       email: emailInput.trim() || undefined,
       telegram: usernameInput.trim() || undefined,
+      depth: 'DEEP_TOTEM',
     });
-
-    onSelectPreset(created);
   };
 
   return (
@@ -254,7 +290,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
             </span>
           </div>
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-sage-soft text-sage font-mono border border-hair">
-            100% ВЕРИФИКАЦИЯ
+            LIVE ENGINE
           </span>
         </div>
 
@@ -262,8 +298,99 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
           РАЗВЕДКА & ПРОВЕРКА ДАННЫХ
         </h1>
         <p className="text-xs text-ink mt-1 leading-relaxed">
-          Инструментарий деанонимизации, алгоритмической проверки контрольных сумм РФ, DNS/IP геолокации и формирования оперативных досье.
+          Живой движок работает с реальными источниками: чек-суммы ФНС/ПФР/ГИБДД, DoH, RDAP, CT-логи, ASN, блокчейн-RPC и кросс-проверка 24 площадок. Без фейковых генераторов.
         </p>
+      </div>
+
+      {/* UNIFIED LIVE SEARCH — главный вход для реальных людей */}
+      <div className="ios-glass p-4 rounded-[20px] border border-emerald-500/20 space-y-3 shadow-[0_10px_30px_rgba(16,185,129,.08)]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 text-xs font-bold text-white uppercase tracking-tight">
+            <Zap className="w-4 h-4 text-emerald-400" />
+            <span>Единый живой поиск</span>
+          </div>
+          <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">
+            РЕАЛЬНЫЕ ДАННЫЕ
+          </span>
+        </div>
+
+        <div>
+          <label className="text-[10px] font-mono text-muted uppercase">Вставьте всё, что есть — телефон, ИНН, ФИО, домен, e-mail, ГРЗ, VIN, криптокошелёк (через запятую)</label>
+          <textarea
+            value={unifiedInput}
+            onChange={(e) => setUnifiedInput(e.target.value)}
+            rows={3}
+            placeholder="Например: +7 916 402-91-88, Соколов Михаил Андреевич 14.08.1988, 7707083893, sberbank.ru, bc1qxy2k..."
+            className="w-full mt-1 px-3.5 py-2.5 bg-panel border border-hair rounded-xl text-xs text-white placeholder-muted focus:outline-none focus:border-emerald-500/40 resize-none"
+          />
+          <div className="text-[10px] text-muted/70 mt-1">
+            Подсказки: <span className="text-ink">+7 9XX XXX-XX-XX</span> • <span className="text-ink">ИНН 10/12 цифр</span> • <span className="text-ink">СНИЛС 148-291-049 88</span> • <span className="text-ink">ОГРН 13 цифр</span> • <span className="text-ink">А 777 ОС 777</span> • <span className="text-ink">WP0AA2Y… (17 VIN)</span> • <span className="text-ink">0x… / bc1… / T…</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <select
+            value={unifiedProfile}
+            onChange={(e) => setUnifiedProfile(e.target.value)}
+            className="px-3 py-2.5 bg-panel border border-hair rounded-xl text-xs font-mono text-white"
+          >
+            <option value="full-spectrum">Полный спектр (рекомендуется)</option>
+            <option value="person-fast">Персона — быстро (25с)</option>
+            <option value="person-deep">Персона — глубоко (2 мин)</option>
+            <option value="infrastructure-recon">Инфраструктура</option>
+            <option value="crypto-investigation">Крипто-расследование</option>
+          </select>
+          <button
+            onClick={handleUnifiedSearch}
+            className="py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-1.5 transition-all"
+          >
+            <Search className="w-4 h-4 text-white" />
+            <span>Запустить живую разведку</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { label: 'Нажми: телефон', val: '+7 916 402-91-88, Соколов Михаил Андреевич' },
+            { label: 'Нажми: домен', val: 'sberbank.ru' },
+            { label: 'Нажми: ИНН', val: '7707083893' },
+          ].map((ex) => (
+            <button
+              key={ex.val}
+              onClick={() => setUnifiedInput(ex.val)}
+              className="py-1.5 px-2 bg-white/5 hover:bg-white/10 rounded-lg text-[10px] font-mono text-ink border border-hair"
+            >
+              {ex.label}
+            </button>
+          ))}
+        </div>
+
+        {liveProgress && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3 py-2 flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="text-[11px] font-mono text-emerald-200 truncate">{liveProgress}</span>
+          </div>
+        )}
+        {investigationError && (
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 flex items-start space-x-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <span className="text-[11px] text-amber-100 leading-snug">{investigationError}</span>
+          </div>
+        )}
+        {liveReport && (
+          <div className="bg-panel border border-hair rounded-xl p-2.5 flex items-center justify-between">
+            <div>
+              <div className="text-xs font-bold text-white">{liveReport.narrative.headline}</div>
+              <div className="text-[10px] font-mono text-muted">
+                {liveReport.entities.length} сущностей • {liveReport.evidence.length} наблюдений • риск {liveReport.risk.score}/100
+              </div>
+            </div>
+            <span className="text-[9px] font-mono px-2 py-1 rounded-full bg-sage-soft text-sage border border-hair">LIVE</span>
+          </div>
+        )}
+        <div className="text-[10px] text-muted leading-relaxed bg-panel/50 p-2 rounded-lg border border-hair">
+          <span className="text-gold font-bold">Как это работает с реальными людьми:</span> вставьте номер телефона, ИНН или домен и нажмите «Запустить». Движок проверит чек-суммы по формулам ФНС/ПФР/ГИБДД, опросит живые API (DoH Cloudflare, RDAP, crt.sh, Blockscout/mempool, соцсети) и покажет только подтверждённые наблюдения с указанием источника и `via`. Если источник недоступен — это честно фиксируется в оговорках, а не выдумывается.
+        </div>
       </div>
 
       {/* Vector Navigation Segmented Bar */}
@@ -299,9 +426,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
         })}
       </div>
 
-      {/* ==================================================================== */}
       {/* VECTOR 1: FIO & BIRTHDATE */}
-      {/* ==================================================================== */}
       {activeVector === 'fio' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -346,7 +471,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
               <button
                 onClick={handleCreateDossier}
@@ -359,17 +483,16 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               <button
                 onClick={() => {
                   sound.playHapticTap();
-                  onSearch({ fio: fio.trim() || undefined, birthDate: birthDate.trim() || undefined, depth: 'DEEP_TOTEM' });
+                  void onSearch({ fio: fio.trim() || undefined, birthDate: birthDate.trim() || undefined, depth: 'DEEP_TOTEM' });
                 }}
                 className="py-2.5 px-3 ios-glass hover:bg-white/10 text-white text-xs font-semibold rounded-xl border border-hair flex items-center justify-center space-x-1.5 transition-all"
               >
-                <Search className="w-4 h-4 text-gold" />
-                <span>Экспресс-проверка</span>
+                <Sparkles className="w-4 h-4 text-gold" />
+                <span>Живая разведка</span>
               </button>
             </div>
           </div>
 
-          {/* Quick Registry Links */}
           <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2">
             <div className="text-[11px] font-bold text-white uppercase tracking-tight flex items-center space-x-2">
               <Building className="w-3.5 h-3.5 text-gold" />
@@ -399,9 +522,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 2: TELECOM & PHONE INTELLIGENCE */}
-      {/* ==================================================================== */}
       {activeVector === 'phone' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -421,7 +542,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               />
             </div>
 
-            {/* Real Telecom Breakdown */}
             {phoneAnalysis && (
               <div className="bg-panel p-3 rounded-xl border border-hair space-y-2">
                 <div className="flex items-center justify-between border-b border-hair pb-2">
@@ -452,7 +572,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                   </div>
                 </div>
 
-                {/* Direct Messenger Links */}
                 <div className="grid grid-cols-3 gap-2 pt-2 border-t border-hair">
                   <a
                     href={phoneAnalysis.links.telegramUrl}
@@ -486,19 +605,21 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
             )}
 
             <button
-              onClick={handleCreateDossier}
+              onClick={() => {
+                sound.playHapticTap();
+                if (onFreeTextSearch) void onFreeTextSearch(phoneInput, 'full-spectrum');
+                else void onSearch({ phone: phoneInput, depth: 'DEEP_TOTEM' });
+              }}
               className="w-full py-2.5 px-3 bg-gradient-to-r from-[#c2664f] to-[#a8834c] hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-1.5 transition-all"
             >
-              <Fingerprint className="w-4 h-4 text-gold" />
-              <span>Создать досье по номеру телефона</span>
+              <Zap className="w-4 h-4 text-gold" />
+              <span>Живая разведка по номеру (реальные проверки)</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 3: DOCUMENTS & POLYNOMIAL CHECKSUMS */}
-      {/* ==================================================================== */}
       {activeVector === 'docs' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -507,7 +628,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               <span>Алгоритмическая валидация контрольных сумм РФ</span>
             </div>
 
-            {/* Document Type Selector */}
             <div className="grid grid-cols-5 gap-1 p-1 bg-panel rounded-xl border border-hair text-[10px] font-semibold">
               {[
                 { id: 'inn', label: 'ИНН' },
@@ -520,8 +640,8 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                   key={item.id}
                   onClick={() => {
                     sound.playHapticTap();
-                    setDocType(item.id as any);
-                    if (item.id === 'inn') setDocInput('770408192039');
+                    setDocType(item.id as never);
+                    if (item.id === 'inn') setDocInput('7707083893');
                     else if (item.id === 'snils') setDocInput('148-291-049 88');
                     else if (item.id === 'passport') setDocInput('45 12 783921');
                     else if (item.id === 'ogrn') setDocInput('1187746892014');
@@ -549,7 +669,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               />
             </div>
 
-            {/* Validation Result Box */}
             {docValidation && (
               <div
                 className={`p-3 rounded-xl border space-y-2 ${
@@ -608,19 +727,20 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
             )}
 
             <button
-              onClick={handleCreateDossier}
+              onClick={() => {
+                if (onFreeTextSearch) void onFreeTextSearch(docInput, 'full-spectrum');
+                else void onSearch({ inn: docType === 'inn' ? docInput : undefined, snils: docType === 'snils' ? docInput : undefined, passport: docType === 'passport' ? docInput : undefined, depth: 'DEEP_TOTEM' });
+              }}
               className="w-full py-2.5 px-3 bg-gradient-to-r from-[#c2664f] to-[#a8834c] hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-1.5 transition-all"
             >
-              <Fingerprint className="w-4 h-4 text-gold" />
-              <span>Прикрепить документ к досье</span>
+              <Zap className="w-4 h-4 text-gold" />
+              <span>Живая проверка документа + разведка</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 4: AUTO / VEHICLES (PLATES & VIN) */}
-      {/* ==================================================================== */}
       {activeVector === 'auto' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -669,7 +789,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               />
             </div>
 
-            {/* Auto Breakdown */}
             {autoValidation && (
               <div
                 className={`p-3 rounded-xl border space-y-2 ${
@@ -717,19 +836,20 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
             )}
 
             <button
-              onClick={handleCreateDossier}
+              onClick={() => {
+                if (onFreeTextSearch) void onFreeTextSearch(autoInput, 'full-spectrum');
+                else void onSearch({ carPlate: autoType === 'plate' ? autoInput : undefined, depth: 'DEEP_TOTEM' });
+              }}
               className="w-full py-2.5 px-3 bg-gradient-to-r from-[#c2664f] to-[#a8834c] hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-1.5 transition-all"
             >
-              <Fingerprint className="w-4 h-4 text-gold" />
-              <span>Добавить ТС в оперативное досье</span>
+              <Zap className="w-4 h-4 text-gold" />
+              <span>Живая разведка по ТС</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 5: NETWORK, IP, DNS, CRYPTO & HASHES */}
-      {/* ==================================================================== */}
       {activeVector === 'net' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -738,7 +858,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               <span>Сетевая разведка: IP Geolocation, DNS over HTTPS, Email & Crypto</span>
             </div>
 
-            {/* Sub-tab switcher */}
             <div className="grid grid-cols-5 gap-1 p-1 bg-panel rounded-xl border border-hair text-[10px] font-semibold">
               {[
                 { id: 'ip', label: 'IP Geo' },
@@ -751,7 +870,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                   key={item.id}
                   onClick={() => {
                     sound.playHapticTap();
-                    setNetTab(item.id as any);
+                    setNetTab(item.id as never);
                   }}
                   className={`py-1.5 rounded-lg text-center transition-all ${
                     netTab === item.id ? 'bg-clay text-white shadow font-bold' : 'text-muted hover:text-white'
@@ -762,7 +881,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               ))}
             </div>
 
-            {/* IP Geo Tool */}
             {netTab === 'ip' && (
               <div className="space-y-2.5">
                 <div>
@@ -783,6 +901,16 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                       {isIpLoading ? 'Поиск...' : 'Геолокация'}
                     </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      if (onFreeTextSearch) void onFreeTextSearch(ipInput, 'infrastructure-recon');
+                      else void onSearch({ fio: ipInput, depth: 'DEEP_TOTEM' });
+                    }}
+                    className="w-full mt-2 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] font-semibold text-white border border-hair flex items-center justify-center space-x-1"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-gold" />
+                    <span>Полная разведка по IP (ASN, PTR, RDAP)</span>
+                  </button>
                 </div>
 
                 {ipResult && (
@@ -815,7 +943,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               </div>
             )}
 
-            {/* DNS DoH Tool */}
             {netTab === 'dns' && (
               <div className="space-y-2.5">
                 <div>
@@ -830,7 +957,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                     />
                     <select
                       value={dnsType}
-                      onChange={(e) => setDnsType(e.target.value as any)}
+                      onChange={(e) => setDnsType(e.target.value as never)}
                       className="px-3 bg-panel border border-hair rounded-xl text-xs font-mono text-white"
                     >
                       <option value="A">A (IPv4)</option>
@@ -846,6 +973,16 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                       {isDnsLoading ? 'Запрос...' : 'DNS DoH'}
                     </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      if (onFreeTextSearch) void onFreeTextSearch(dnsDomain, 'infrastructure-recon');
+                      else void onSearch({ fio: dnsDomain, depth: 'DEEP_TOTEM' });
+                    }}
+                    className="w-full mt-2 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] font-semibold text-white border border-hair flex items-center justify-center space-x-1"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-gold" />
+                    <span>Полная разведка домена (DoH, CT, RDAP, веб)</span>
+                  </button>
                 </div>
 
                 {dnsResults.length > 0 && (
@@ -863,7 +1000,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               </div>
             )}
 
-            {/* Email Tool */}
             {netTab === 'email' && (
               <div className="space-y-2.5">
                 <div>
@@ -884,6 +1020,16 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                       {isEmailLoading ? 'Проверка...' : 'Анализ MX'}
                     </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      if (onFreeTextSearch) void onFreeTextSearch(emailInput, 'full-spectrum');
+                      else void onSearch({ email: emailInput, depth: 'DEEP_TOTEM' });
+                    }}
+                    className="w-full mt-2 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] font-semibold text-white border border-hair flex items-center justify-center space-x-1"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-gold" />
+                    <span>Разведка e-mail (MX, утечки, Gravatar)</span>
+                  </button>
                 </div>
 
                 {emailResult && (
@@ -908,7 +1054,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                       </div>
                     </div>
 
-                    {/* Direct Search in Leaks */}
                     <div className="grid grid-cols-2 gap-2 pt-1 border-t border-hair">
                       <a
                         href={emailResult.searchLinks.hibp}
@@ -934,7 +1079,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               </div>
             )}
 
-            {/* Crypto Tool */}
             {netTab === 'crypto' && (
               <div className="space-y-2.5">
                 <div>
@@ -954,6 +1098,16 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
                       Баланс RPC
                     </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      if (onFreeTextSearch) void onFreeTextSearch(cryptoInput, 'crypto-investigation');
+                      else void onSearch({ fio: cryptoInput, depth: 'DEEP_TOTEM' });
+                    }}
+                    className="w-full mt-2 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] font-semibold text-white border border-hair flex items-center justify-center space-x-1"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-gold" />
+                    <span>Крипто-расследование (кластеры, миксер, контрагенты)</span>
+                  </button>
                 </div>
 
                 {cryptoResult && (
@@ -990,7 +1144,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               </div>
             )}
 
-            {/* Hash Generator */}
             {netTab === 'hash' && (
               <div className="space-y-2.5">
                 <div>
@@ -1034,9 +1187,7 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 6: USERNAME & SOCIAL FOOTPRINT */}
-      {/* ==================================================================== */}
       {activeVector === 'user' && (
         <div className="space-y-3.5">
           <div className="ios-glass p-4 rounded-[20px] border border-hair space-y-3">
@@ -1056,7 +1207,6 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
               />
             </div>
 
-            {/* Social Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[340px] overflow-y-auto no-scrollbar pt-1">
               {socialResults.map((res, idx) => (
                 <a
@@ -1081,19 +1231,20 @@ export const SearchHub: React.FC<SearchHubProps> = ({ onSearch, onSelectPreset }
             </div>
 
             <button
-              onClick={handleCreateDossier}
+              onClick={() => {
+                if (onFreeTextSearch) void onFreeTextSearch(usernameInput.startsWith('@') ? usernameInput : `@${usernameInput}`, 'full-spectrum');
+                else void onSearch({ telegram: usernameInput, depth: 'DEEP_TOTEM' });
+              }}
               className="w-full py-2.5 px-3 bg-gradient-to-r from-[#c2664f] to-[#a8834c] hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-1.5 transition-all"
             >
-              <Fingerprint className="w-4 h-4 text-gold" />
-              <span>Создать досье по никнейму</span>
+              <Zap className="w-4 h-4 text-gold" />
+              <span>Живой поиск никнейма (24 площадки)</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* ==================================================================== */}
       {/* VECTOR 7: PHOTO, EXIF & FORENSICS */}
-      {/* ==================================================================== */}
       {activeVector === 'face' && (
         <BiometricFaceScanner onScanMatch={(name) => setFio(name)} />
       )}
