@@ -238,8 +238,15 @@ export interface IntegritySeal {
   algorithm: 'SHA-256';
   /** Digest over the evidence chain (ids, keys, values, confidences). */
   evidenceDigest: string;
-  /** Digest over the canonical report payload. */
+  /** Digest over the canonical report payload (includes run timestamps). */
   reportDigest: string;
+  /**
+   * Digest over the timestamp-free content projection (entities, edges,
+   * evidence, findings, risk). Two runs over the same data produce the same
+   * contentDigest even though generatedAt/durations differ — this is the seal
+   * to publish or compare when verifying a shared report.
+   */
+  contentDigest: string;
   generatedBy: string;
   engineVersion: string;
 }

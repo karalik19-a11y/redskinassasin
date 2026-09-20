@@ -452,6 +452,16 @@ export class OsintEngine {
         },
       };
 
+      const byId = (left: readonly unknown[], right: readonly unknown[]): number => String(left[0]).localeCompare(String(right[0]));
+      const contentDigest = await sha256AsyncSafe(
+        stableStringify({
+          entities: entities.map((entity) => [entity.id, entity.type, entity.value, entity.confidence, entity.tags.slice().sort()]).sort(byId),
+          edges: edges.map((edge) => [edge.id, edge.from, edge.to, edge.relation, edge.confidence, edge.weight]).sort(byId),
+          evidence: ledger.all().map((record) => [record.id, record.key, record.value, record.confidence, record.source.name]).sort(byId),
+          findings: findings.map((finding) => [finding.id, finding.title, finding.severity, finding.confidence]).sort(byId),
+          risk: [riskAssessment.score, riskAssessment.level, riskAssessment.factors.map((factor) => factor.id).sort()],
+        }),
+      );
       const reportDigest = await sha256AsyncSafe(stableStringify(reportBase));
       const report: InvestigationReport = {
         ...reportBase,
@@ -459,6 +469,7 @@ export class OsintEngine {
           algorithm: 'SHA-256',
           evidenceDigest,
           reportDigest,
+          contentDigest,
           generatedBy: 'TOMAHAWK OSINT Engine',
           engineVersion: ENGINE_VERSION,
         },

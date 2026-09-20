@@ -218,6 +218,8 @@ const secondEngine = createOsintEngine({ settings: { offline: true, budgetMs: 20
 const secondReport = await secondEngine.investigate({ input: 'Соколов Михаил Андреевич, +7 (916) 402-91-88, m.sokolov@example.com, ИНН 7707083893', profile: 'person-fast' });
 ok('Повторный запуск даёт те же id сущностей (детерминизм)', JSON.stringify(offlineReport.entities.map((entity) => entity.id).sort()) === JSON.stringify(secondReport.entities.map((entity) => entity.id).sort()));
 check('Повторный запуск даёт тот же риск (детерминизм)', secondReport.risk.score, offlineReport.risk.score);
+check('Печать содержимого отчёта постоянна (contentDigest)', secondReport.integrity.contentDigest, offlineReport.integrity.contentDigest);
+ok('Печать содержимого — корректный SHA-256', /^[0-9a-f]{64}$/.test(offlineReport.integrity.contentDigest));
 
 section('§2b План без сбора (engine.plan)');
 const plan = offlineEngine.plan('+7 (916) 402-91-88');
