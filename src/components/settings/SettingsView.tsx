@@ -71,8 +71,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               {isFrameEnabled ? <Smartphone className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </div>
             <div>
-              <div className="text-xs font-semibold text-white">Рамка iPhone 16 Pro</div>
-              <div className="text-[10px] text-neutral-400">Титановый корпус или адаптивный экран</div>
+              <div className="text-xs font-semibold text-white">Компактность рабочей области</div>
+              <div className="text-[10px] text-neutral-400">Плотный или свободный ритм интерфейса</div>
             </div>
           </div>
 

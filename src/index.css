@@ -1,134 +1,71 @@
 @import "tailwindcss";
 
 @layer base {
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    background-color: #030305;
-    color: #f1f5f9;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body, #root { margin: 0; min-height: 100%; }
+  body {
+    background: #10131c;
+    color: #f5f1e8;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     overflow-x: hidden;
-    user-select: none;
-    -webkit-user-select: none;
   }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(10, 10, 15, 0.6);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(220, 38, 38, 0.4);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(239, 68, 68, 0.8);
+:root {
+  --ink: #f5f1e8;
+  --muted: #9da3b2;
+  --deep: #10131c;
+  --panel: rgba(25, 29, 42, .76);
+  --line: rgba(255,255,255,.105);
+  --clay: #d26f57;
+  --gold: #d7ad6a;
+  --sage: #85a092;
+  --violet: #8f8bb5;
 }
 
-/* Cyber Shamanic & iOS Glass Effects */
-.ios-glass {
-  background: rgba(18, 18, 26, 0.75);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
+::selection { background: rgba(210,111,87,.5); color: white; }
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.16); border-radius: 99px; }
 
-.ios-glass-card {
-  background: linear-gradient(135deg, rgba(28, 25, 38, 0.65) 0%, rgba(15, 14, 22, 0.85) 100%);
-  backdrop-filter: blur(20px) saturate(190%);
-  -webkit-backdrop-filter: blur(20px) saturate(190%);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+.ios-glass, .ios-glass-card {
+  background: var(--panel) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055) !important;
+  backdrop-filter: blur(22px) saturate(125%);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease;
 }
+.ios-glass-card { background: linear-gradient(135deg, rgba(35,40,56,.9), rgba(22,25,36,.78)) !important; }
+.ios-glass:hover, .ios-glass-card:hover { border-color: rgba(215,173,106,.27) !important; }
+.totem-glow, .cyber-gold-glow, .cyber-turquoise-glow { text-shadow: none !important; }
 
-.ios-glass-accent {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.18) 0%, rgba(185, 28, 28, 0.05) 100%);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.15);
+input, select, textarea {
+  background-color: rgba(12,15,23,.62) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: var(--ink) !important;
 }
+input::placeholder, textarea::placeholder { color: #6f7687 !important; }
 
-.totem-glow {
-  text-shadow: 0 0 12px rgba(239, 68, 68, 0.7), 0 0 25px rgba(245, 158, 11, 0.4);
-}
+@keyframes ambient-drift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(18px,-12px,0) scale(1.06); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes soft-pulse { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
+.animate-pulse-totem { animation: soft-pulse 3s ease-in-out infinite; }
+.spring-transition { transition: all .35s cubic-bezier(.22,1,.36,1); }
+button { transition: transform .22s cubic-bezier(.22,1,.36,1), background .22s ease, border-color .22s ease, box-shadow .22s ease; }
+button:active { transform: scale(.975); }
+input:focus { box-shadow: 0 0 0 3px rgba(143,139,181,.2); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.text-red-400, .text-red-300, .text-red-200 { color: #e5937d !important; }
+.text-amber-400, .text-amber-300, .text-amber-200 { color: #dfbd7d !important; }
+.text-neutral-400, .text-neutral-300 { color: var(--muted) !important; }
+.bg-red-600 { background-color: var(--clay) !important; }
+.bg-black\/60, .bg-black\/95 { background-color: rgba(14,17,26,.84) !important; }
+.border-red-500\/30, .border-red-500\/20, .border-red-500\/40 { border-color: rgba(210,111,87,.38) !important; }
 
-.cyber-gold-glow {
-  text-shadow: 0 0 12px rgba(245, 158, 11, 0.6), 0 0 20px rgba(217, 119, 6, 0.3);
-}
-
-.cyber-turquoise-glow {
-  text-shadow: 0 0 10px rgba(20, 184, 166, 0.6), 0 0 20px rgba(6, 182, 212, 0.3);
-}
-
-/* Animations */
-@keyframes radar-sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse-totem {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes scan-line {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(1000%);
-  }
-}
-
-@keyframes glitch-text {
-  0% { transform: translate(0) }
-  20% { transform: translate(-2px, 2px) }
-  40% { transform: translate(-2px, -2px) }
-  60% { transform: translate(2px, 2px) }
-  80% { transform: translate(2px, -2px) }
-  100% { transform: translate(0) }
-}
-
-.animate-radar {
-  animation: radar-sweep 4s linear infinite;
-}
-
-.animate-pulse-totem {
-  animation: pulse-totem 3s ease-in-out infinite;
-}
-
-.animate-scan-bar {
-  animation: scan-line 3s linear infinite;
-}
-
-/* iOS Smooth dynamic island spring */
-.spring-transition {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Indigenous Feather & Diamond Pattern SVG Overlay */
-.tribal-pattern-bg {
-  background-image: radial-gradient(rgba(220, 38, 38, 0.12) 1px, transparent 0),
-                    radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 0);
-  background-position: 0 0, 20px 20px;
-  background-size: 40px 40px;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
