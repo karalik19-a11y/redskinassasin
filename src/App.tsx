@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShamanBackground } from './components/layout/ShamanBackground';
 import { IPhoneFrame } from './components/layout/IPhoneFrame';
 import { BottomNavBar } from './components/layout/BottomNavBar';
@@ -11,19 +11,32 @@ import { BreachExplorer } from './components/breaches/BreachExplorer';
 import { CyberTerminal } from './components/terminal/CyberTerminal';
 import { SettingsView } from './components/settings/SettingsView';
 import type { Dossier, SearchQuery, Relative } from './types/dossier';
-import { PRESET_DOSSIERS } from './utils/presetDossiers';
-import { generateProceduralDossier } from './utils/proceduralGenerator';
+import {
+  loadActiveCase,
+  loadAllCases,
+  saveOrUpdateCase,
+  createVerifiedDossierFromQuery,
+  SAMPLE_INVESTIGATION_CASE,
+  saveAllCases,
+  setActiveCaseId,
+} from './utils/caseStorage';
 import { sound } from './utils/sound';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('search');
-  const [currentDossier, setCurrentDossier] = useState<Dossier | null>(PRESET_DOSSIERS[0]);
+  const [currentDossier, setCurrentDossier] = useState<Dossier | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTargetName, setPendingTargetName] = useState('');
   const [isFrameEnabled, setIsFrameEnabled] = useState(true);
   const [isSoundEnabled, setIsSoundEnabled] = useState(sound.isEnabled());
 
-  // Handle Initiating Search
+  // Load initial case from persistent storage
+  useEffect(() => {
+    const active = loadActiveCase();
+    setCurrentDossier(active);
+  }, []);
+
+  // Handle Initiating Search & Real Dossier Construction
   const handleSearch = (query: SearchQuery) => {
     let targetName = query.fio || '';
     if (!targetName && query.lastName) {
@@ -45,30 +58,34 @@ export function App() {
     setPendingTargetName(targetName);
     setIsScanning(true);
 
-    // Check if matching preset exists
-    const matchingPreset = PRESET_DOSSIERS.find(
+    // Check existing stored cases
+    const allCases = loadAllCases();
+    const matchingCase = allCases.find(
       (p) =>
         (query.fio && p.fio.full.toLowerCase().includes(query.fio.toLowerCase())) ||
         (query.phone && p.telecom.some((t) => t.number.includes(query.phone!))) ||
-        (query.passport && p.documents.some((d) => d.number.includes(query.passport!)))
+        (query.passport && p.documents.some((d) => d.number.includes(query.passport!))) ||
+        (query.carPlate && p.assets.vehicles.some((v) => v.plate.includes(query.carPlate!)))
     );
 
     setTimeout(() => {
-      if (matchingPreset) {
-        setCurrentDossier(matchingPreset);
+      if (matchingCase) {
+        setCurrentDossier(matchingCase);
+        setActiveCaseId(matchingCase.id);
       } else {
-        const generated = generateProceduralDossier(query);
+        const generated = createVerifiedDossierFromQuery(query);
         setCurrentDossier(generated);
       }
-    }, 500);
+    }, 450);
   };
 
   const handleSelectPreset = (dossier: Dossier) => {
     setPendingTargetName(dossier.fio.full);
     setIsScanning(true);
+    saveOrUpdateCase(dossier);
     setTimeout(() => {
       setCurrentDossier(dossier);
-    }, 400);
+    }, 350);
   };
 
   const handleScanComplete = () => {
@@ -89,7 +106,9 @@ export function App() {
   };
 
   const handleResetData = () => {
-    setCurrentDossier(PRESET_DOSSIERS[0]);
+    saveAllCases([SAMPLE_INVESTIGATION_CASE]);
+    setActiveCaseId(SAMPLE_INVESTIGATION_CASE.id);
+    setCurrentDossier(SAMPLE_INVESTIGATION_CASE);
     setActiveTab('search');
     sound.playSuccessChime();
   };
@@ -166,6 +185,10 @@ export function App() {
                 isFrameEnabled={isFrameEnabled}
                 onToggleFrame={() => setIsFrameEnabled(!isFrameEnabled)}
                 onResetData={handleResetData}
+                onSelectCase={(cs) => {
+                  setCurrentDossier(cs);
+                  setActiveTab('dossier');
+                }}
               />
             )}
           </main>
