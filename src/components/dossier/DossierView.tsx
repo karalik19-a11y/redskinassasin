@@ -64,12 +64,12 @@ export const DossierView: React.FC<DossierViewProps> = ({
             sound.playHapticTap();
             onBackToSearch();
           }}
-          className="text-xs text-neutral-400 hover:text-white flex items-center space-x-1 py-1 px-2 rounded-lg bg-white/5 border border-white/5 transition-all"
+          className="text-xs text-muted hover:text-white flex items-center space-x-1 py-1 px-2 rounded-lg bg-white/5 border border-hair transition-all"
         >
           <span>&larr; Новый поиск</span>
         </button>
 
-        <span className="text-[10px] font-mono text-neutral-500">
+        <span className="text-[10px] font-mono text-muted">
           ID: {dossier.id}
         </span>
       </div>
@@ -78,7 +78,7 @@ export const DossierView: React.FC<DossierViewProps> = ({
       <HeaderCard dossier={dossier} />
 
       {/* Segmented iOS Sub-Navbar (Horizontal Scroll) */}
-      <div className="flex space-x-1 overflow-x-auto py-1 px-1 no-scrollbar bg-black/60 rounded-2xl border border-white/10 backdrop-blur-md">
+      <div className="flex space-x-1 overflow-x-auto py-1 px-1 no-scrollbar bg-panel rounded-[16px] border border-hair backdrop-blur-md">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -91,8 +91,8 @@ export const DossierView: React.FC<DossierViewProps> = ({
               }}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-red-600 to-amber-700 text-white shadow-[0_0_12px_rgba(239,68,68,0.5)] border border-amber-400/30'
-                  : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-gradient-to-r from-[#c2664f] to-[#a8834c] text-white shadow-[0_10px_30px_rgba(0,0,0,.28)] border border-hair'
+                  : 'text-muted hover:text-white hover:bg-white/5'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />

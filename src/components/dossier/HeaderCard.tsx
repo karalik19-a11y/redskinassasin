@@ -39,12 +39,12 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl ios-glass-card p-4 border border-red-500/30 space-y-3.5 select-none">
+    <div className="relative overflow-hidden rounded-[20px] ios-glass-card p-4 border border-hair space-y-3.5 select-none">
       {/* Top Threat & Classification Stamp */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-1.5">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-          <span className="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider">
+          <span className="w-2 h-2 rounded-full bg-clay animate-pulse-totem" />
+          <span className="text-[10px] font-mono font-bold text-clay uppercase tracking-wider">
             {dossier.intelligenceNotes.classification}
           </span>
         </div>
@@ -61,7 +61,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
       {/* Main Profile Info Row */}
       <div className="flex items-start space-x-3.5">
         {/* Avatar with Shamanic Cyber Warpaint HUD Frame */}
-        <div className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 border-2 border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+        <div className="relative w-20 h-20 rounded-[16px] overflow-hidden shrink-0 border-2 border-hair shadow-[0_10px_30px_rgba(0,0,0,.28)]">
           <img
             src={dossier.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'}
             alt={dossier.fio.full}
@@ -70,27 +70,27 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
 
           {/* Warpaint Facial Glitch Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute bottom-1 left-1 px-1 py-0.2 bg-red-600 text-[8px] font-bold font-mono text-white rounded">
+          <div className="absolute bottom-1 left-1 px-1 py-0.2 bg-clay text-[8px] font-bold font-mono text-white rounded">
             {dossier.biometricMatchRate}%
           </div>
         </div>
 
         {/* FIO & Totem Details */}
         <div className="min-w-0 flex-1">
-          <h2 className="text-lg font-black text-white tracking-tight leading-tight totem-glow">
+          <h2 className="text-lg font-semibold text-white tracking-tight leading-tight ">
             {dossier.fio.full}
           </h2>
 
           {/* Totem Animal Subtitle */}
-          <div className="flex items-center space-x-1.5 mt-1 text-amber-300 font-mono text-[11px] font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <div className="flex items-center space-x-1.5 mt-1 text-gold font-mono text-[11px] font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-gold shrink-0" />
             <span className="truncate">{dossier.totemTitle}</span>
           </div>
 
-          <div className="text-[10px] text-neutral-400 flex flex-wrap gap-x-2 gap-y-0.5 mt-1">
+          <div className="text-[10px] text-muted flex flex-wrap gap-x-2 gap-y-0.5 mt-1">
             <span>{dossier.birthDate} ({dossier.age} лет)</span>
             <span>•</span>
-            <span className="text-amber-200/90">{dossier.zodiac}</span>
+            <span className="text-gold">{dossier.zodiac}</span>
             <span>•</span>
             <span className="truncate">{dossier.birthPlace}</span>
           </div>
@@ -101,7 +101,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
               {dossier.aliases.slice(0, 3).map((alias, i) => (
                 <span
                   key={i}
-                  className="px-1.5 py-0.2 bg-white/5 border border-white/10 rounded-md text-[9px] font-mono text-neutral-300"
+                  className="px-1.5 py-0.2 bg-white/5 border border-hair rounded-md text-[9px] font-mono text-ink"
                 >
                   @{alias}
                 </span>
@@ -112,7 +112,7 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
       </div>
 
       {/* Summary note */}
-      <p className="text-xs text-neutral-300 bg-neutral-950/60 p-2.5 rounded-xl border border-white/5 leading-relaxed">
+      <p className="text-xs text-ink bg-panel p-2.5 rounded-xl border border-hair leading-relaxed">
         {dossier.summary}
       </p>
 
@@ -120,25 +120,25 @@ export const HeaderCard: React.FC<HeaderCardProps> = ({ dossier }) => {
       <div className="grid grid-cols-3 gap-2 pt-1">
         <button
           onClick={handleExportPDF}
-          className="py-2 px-2 bg-gradient-to-r from-red-600/40 to-amber-600/30 hover:bg-red-600/60 border border-red-500/50 rounded-xl text-[11px] font-bold text-white flex items-center justify-center space-x-1.5 transition-all shadow-[0_0_12px_rgba(239,68,68,0.2)]"
+          className="py-2 px-2 bg-gradient-to-r from-[#c2664f] to-[#a8834c] hover:bg-clay/60 border border-hair rounded-xl text-[11px] font-bold text-white flex items-center justify-center space-x-1.5 transition-all shadow-[0_10px_30px_rgba(0,0,0,.28)]"
         >
-          <Download className="w-3.5 h-3.5 text-amber-400" />
+          <Download className="w-3.5 h-3.5 text-gold" />
           <span>Экспорт PDF</span>
         </button>
 
         <button
           onClick={handleCopyJSON}
-          className="py-2 px-2 ios-glass hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-medium text-neutral-200 flex items-center justify-center space-x-1.5 transition-all"
+          className="py-2 px-2 ios-glass hover:bg-white/10 border border-hair rounded-xl text-[11px] font-medium text-ink flex items-center justify-center space-x-1.5 transition-all"
         >
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-neutral-400" />}
+          {copied ? <Check className="w-3.5 h-3.5 text-sage" /> : <Copy className="w-3.5 h-3.5 text-muted" />}
           <span>{copied ? 'Скопировано' : 'JSON Досье'}</span>
         </button>
 
         <button
           onClick={handleShare}
-          className="py-2 px-2 ios-glass hover:bg-white/10 border border-white/10 rounded-xl text-[11px] font-medium text-neutral-200 flex items-center justify-center space-x-1.5 transition-all"
+          className="py-2 px-2 ios-glass hover:bg-white/10 border border-hair rounded-xl text-[11px] font-medium text-ink flex items-center justify-center space-x-1.5 transition-all"
         >
-          <Share2 className="w-3.5 h-3.5 text-neutral-400" />
+          <Share2 className="w-3.5 h-3.5 text-muted" />
           <span>Поделиться</span>
         </button>
       </div>

@@ -51,7 +51,7 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
   return (
     <div className="space-y-4">
       {/* Viewfinder Frame */}
-      <div className="relative w-full aspect-square max-w-[320px] mx-auto rounded-3xl overflow-hidden border-2 border-red-500/40 bg-neutral-950 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+      <div className="relative w-full aspect-square max-w-[320px] mx-auto rounded-[20px] overflow-hidden border-2 border-hair bg-panel shadow-[0_10px_30px_rgba(0,0,0,.28)]">
         {selectedImage ? (
           <img
             src={selectedImage}
@@ -59,7 +59,7 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
             className="w-full h-full object-cover filter brightness-90 contrast-110"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-neutral-500">
+          <div className="w-full h-full flex flex-col items-center justify-center text-muted">
             <Camera className="w-12 h-12 mb-2" />
             <span className="text-xs">Загрузите фото лица</span>
           </div>
@@ -68,33 +68,33 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
         {/* Shamanic Cyber Warpaint HUD Mesh */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
           {/* Facial Target Box */}
-          <div className="relative w-48 h-56 border-2 border-dashed border-amber-400/70 rounded-3xl flex items-center justify-center">
+          <div className="relative w-48 h-56 border-2 border-dashed border-hair rounded-[20px] flex items-center justify-center">
             {/* Corner Markers */}
-            <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-red-500" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-red-500" />
-            <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-red-500" />
-            <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-red-500" />
+            <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-hair" />
+            <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-hair" />
+            <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-hair" />
+            <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-hair" />
 
             {/* Cyber Warpaint Cheek Glyphs */}
             <div className="absolute top-1/3 -left-3 flex flex-col space-y-1">
-              <span className="w-3 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
-              <span className="w-4 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
-              <span className="w-2 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
+              <span className="w-3 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
+              <span className="w-4 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
+              <span className="w-2 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
             </div>
             <div className="absolute top-1/3 -right-3 flex flex-col space-y-1">
-              <span className="w-3 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
-              <span className="w-4 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
-              <span className="w-2 h-0.5 bg-red-500 shadow-[0_0_6px_red]" />
+              <span className="w-3 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
+              <span className="w-4 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
+              <span className="w-2 h-0.5 bg-clay shadow-[0_10px_30px_rgba(0,0,0,.28)]" />
             </div>
 
             {/* Center Crosshair */}
-            <div className="w-6 h-6 border border-red-400/60 rounded-full flex items-center justify-center">
-              <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
+            <div className="w-6 h-6 border border-hair rounded-full flex items-center justify-center">
+              <span className="w-1.5 h-1.5 bg-clay rounded-full animate-pulse-totem" />
             </div>
 
             {/* Scanning Laser Line */}
             {isAnalyzing && (
-              <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-red-500 to-transparent shadow-[0_0_12px_rgba(239,68,68,1)] animate-scan-bar" />
+              <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#b45c46] to-transparent shadow-[0_10px_30px_rgba(0,0,0,.28)] animate-scan-bar" />
             )}
           </div>
         </div>
@@ -102,10 +102,10 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
         {/* Live Status Overlay */}
         <div className="absolute bottom-2 inset-x-2 py-1 px-3 ios-glass rounded-xl text-[10px] flex items-center justify-between text-white/90">
           <span className="flex items-center space-x-1 font-mono">
-            <Sparkles className="w-3 h-3 text-amber-400" />
+            <Sparkles className="w-3 h-3 text-gold" />
             <span>ВЕКТОР: 1024-D</span>
           </span>
-          <span className="text-emerald-400 font-mono">
+          <span className="text-sage font-mono">
             {isAnalyzing ? 'АНАЛИЗ...' : 'ГОТОВ К СКАНИРОВАНИЮ'}
           </span>
         </div>
@@ -113,13 +113,13 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
 
       {/* Analysis Result Box */}
       {analysisResult && (
-        <div className="ios-glass-accent p-3.5 rounded-2xl border border-red-500/40 space-y-2">
+        <div className="ios-glass-accent p-3.5 rounded-[16px] border border-hair space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1.5 text-emerald-400 text-xs font-bold">
+            <div className="flex items-center space-x-1.5 text-sage text-xs font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>СОВПАДЕНИЕ НАЙДЕНО ({analysisResult.confidence}%)</span>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-soft text-gold font-mono">
               {analysisResult.totem}
             </span>
           </div>
@@ -133,7 +133,7 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
               sound.playHapticTap();
               onScanMatch(analysisResult.name);
             }}
-            className="w-full py-2.5 bg-gradient-to-r from-red-600 via-amber-600 to-red-600 hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.5)] flex items-center justify-center space-x-2 transition-transform active:scale-95"
+            className="w-full py-2.5 bg-gradient-to-r from-[#c2664f] via-[#b8925a] to-[#a8523d] hover:brightness-110 text-white text-xs font-bold rounded-xl shadow-[0_10px_30px_rgba(0,0,0,.28)] flex items-center justify-center space-x-2 transition-transform active:scale-95"
           >
             <CheckCircle2 className="w-4 h-4" />
             <span>ОТКРЫТЬ ПОЛНОЕ ДОСЬЕ</span>
@@ -143,8 +143,8 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
 
       {/* Buttons */}
       <div className="grid grid-cols-2 gap-2">
-        <label className="cursor-pointer py-2.5 px-3 ios-glass hover:bg-white/10 rounded-2xl border border-white/10 text-xs font-semibold text-white/90 flex items-center justify-center space-x-2 transition-all">
-          <Upload className="w-4 h-4 text-amber-400" />
+        <label className="cursor-pointer py-2.5 px-3 ios-glass hover:bg-white/10 rounded-[16px] border border-hair text-xs font-semibold text-white/90 flex items-center justify-center space-x-2 transition-all">
+          <Upload className="w-4 h-4 text-gold" />
           <span>Загрузить фото</span>
           <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
         </label>
@@ -155,9 +155,9 @@ export const BiometricFaceScanner: React.FC<BiometricFaceScannerProps> = ({ onSc
             if (selectedImage) runFaceRecognition(selectedImage);
           }}
           disabled={isAnalyzing}
-          className="py-2.5 px-3 bg-red-600/30 hover:bg-red-600/50 border border-red-500/50 rounded-2xl text-xs font-semibold text-white flex items-center justify-center space-x-2 transition-all"
+          className="py-2.5 px-3 bg-clay/30 hover:bg-clay/50 border border-hair rounded-[16px] text-xs font-semibold text-white flex items-center justify-center space-x-2 transition-all"
         >
-          <RefreshCw className={`w-4 h-4 text-red-400 ${isAnalyzing ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 text-clay ${isAnalyzing ? 'animate-spin' : ''}`} />
           <span>{isAnalyzing ? 'Поиск...' : 'Сканировать'}</span>
         </button>
       </div>

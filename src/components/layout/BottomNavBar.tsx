@@ -20,7 +20,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, onTabChan
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = activeTab === id;
           return (
-            <button key={id} onClick={() => { sound.playHapticTap(); onTabChange(id as ActiveTab); }} className={`relative flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-2xl px-1 text-[10px] transition-all ${active ? 'bg-[#d7ad6a]/15 text-[#f1d49a] shadow-[inset_0_1px_0_rgba(255,255,255,.1)]' : 'text-[#858c9b] hover:bg-white/[.05] hover:text-[#e9e5dc]'}`}>
+            <button key={id} onClick={() => { sound.playHapticTap(); onTabChange(id as ActiveTab); }} className={`relative flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-[16px] px-1 text-[10px] transition-all ${active ? 'bg-[#d7ad6a]/15 text-[#f1d49a] shadow-[inset_0_1px_0_rgba(255,255,255,.1)]' : 'text-[#858c9b] hover:bg-white/[.05] hover:text-[#e9e5dc]'}`}>
               <Icon className={`h-[17px] w-[17px] ${active ? 'text-[#d7ad6a]' : ''}`} strokeWidth={active ? 2.2 : 1.7} />
               <span className={active ? 'font-semibold' : ''}>{label}</span>
               {id === 'dossier' && hasDossier && <span className="absolute right-[20%] top-2 h-1.5 w-1.5 rounded-full bg-[#d26f57]" />}

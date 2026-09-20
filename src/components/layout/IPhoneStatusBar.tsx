@@ -31,14 +31,14 @@ export const IPhoneStatusBar: React.FC<StatusBarProps> = () => {
       <div className="flex items-center space-x-2 text-white/80">
         {/* Cellular Bars */}
         <div className="flex items-end space-x-[2px] h-3">
-          <span className="w-[3px] h-1.5 bg-red-400 rounded-xs" />
-          <span className="w-[3px] h-2 bg-red-400 rounded-xs" />
-          <span className="w-[3px] h-2.5 bg-red-400 rounded-xs" />
-          <span className="w-[3px] h-3 bg-red-400 rounded-xs" />
+          <span className="w-[3px] h-1.5 bg-clay rounded-xs" />
+          <span className="w-[3px] h-2 bg-clay rounded-xs" />
+          <span className="w-[3px] h-2.5 bg-clay rounded-xs" />
+          <span className="w-[3px] h-3 bg-clay rounded-xs" />
         </div>
 
         {/* 5G Totem Indicator */}
-        <span className="text-[10px] font-bold text-amber-400/90 tracking-tighter">5G+</span>
+        <span className="text-[10px] font-bold text-gold tracking-tighter">5G+</span>
 
         {/* Wi-Fi Icon */}
         <Wifi className="w-3.5 h-3.5 text-white/85" />
@@ -47,8 +47,8 @@ export const IPhoneStatusBar: React.FC<StatusBarProps> = () => {
         <div className="flex items-center space-x-1">
           <span className="text-[10px] text-white/70">98%</span>
           <div className="relative flex items-center">
-            <Battery className="w-4 h-4 text-emerald-400" />
-            <span className="absolute left-[3px] top-[4px] w-2 h-1.5 bg-emerald-400 rounded-xs" />
+            <Battery className="w-4 h-4 text-sage" />
+            <span className="absolute left-[3px] top-[4px] w-2 h-1.5 bg-sage-soft rounded-xs" />
           </div>
         </div>
       </div>

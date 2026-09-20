@@ -1,70 +1,105 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ─────────────────────────────────────────────── */
+:root {
+  --ink: #ece7dc;
+  --muted: #9aa0ad;
+  --faint: #6b7180;
+  --deep: #0e1118;
+  --panel: rgba(23, 27, 38, .82);
+  --panel-solid: #171b26;
+  --line: rgba(236, 231, 220, .10);
+  --clay: #cd7159;
+  --gold: #d4ab6a;
+  --sage: #86a493;
+  --violet: #9a95c0;
+}
+
+@theme {
+  --color-ink: #ece7dc;
+  --color-muted: #9aa0ad;
+  --color-faint: #6b7180;
+  --color-clay: #cd7159;
+  --color-gold: #d4ab6a;
+  --color-sage: #86a493;
+  --color-violet-ink: #9a95c0;
+
+  --font-sans: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Semantic surface utilities used across every screen */
+@utility bg-panel { background-color: var(--panel); }
+@utility bg-clay-soft { background-color: rgba(205, 113, 89, .16); }
+@utility bg-gold-soft { background-color: rgba(212, 171, 106, .15); }
+@utility bg-sage-soft { background-color: rgba(134, 164, 147, .15); }
+@utility bg-violet-soft { background-color: rgba(154, 149, 192, .15); }
+@utility border-hair { border-color: var(--line); }
+
 @layer base {
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body, #root { margin: 0; min-height: 100%; }
   body {
-    background: #10131c;
-    color: #f5f1e8;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--deep);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+    letter-spacing: -0.005em;
     overflow-x: hidden;
   }
-  button, input { font: inherit; }
+  h1, h2, h3 { letter-spacing: -0.02em; font-weight: 600; }
+  button, input, select, textarea { font: inherit; }
   button { cursor: pointer; }
 }
 
-:root {
-  --ink: #f5f1e8;
-  --muted: #9da3b2;
-  --deep: #10131c;
-  --panel: rgba(25, 29, 42, .76);
-  --line: rgba(255,255,255,.105);
-  --clay: #d26f57;
-  --gold: #d7ad6a;
-  --sage: #85a092;
-  --violet: #8f8bb5;
-}
-
-::selection { background: rgba(210,111,87,.5); color: white; }
+::selection { background: rgba(205, 113, 89, .45); color: #fff; }
 ::-webkit-scrollbar { width: 7px; height: 7px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,.16); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: rgba(236,231,220,.14); border-radius: 99px; }
 
-.ios-glass, .ios-glass-card {
-  background: var(--panel) !important;
-  border: 1px solid var(--line) !important;
-  box-shadow: 0 18px 50px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055) !important;
-  backdrop-filter: blur(22px) saturate(125%);
-  -webkit-backdrop-filter: blur(22px) saturate(125%);
-  transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease;
+/* ─── Surfaces ──────────────────────────────────────────────────── */
+.ios-glass,
+.ios-glass-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .26), inset 0 1px 0 rgba(255, 255, 255, .045);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.22, 1, .36, 1);
 }
-.ios-glass-card { background: linear-gradient(135deg, rgba(35,40,56,.9), rgba(22,25,36,.78)) !important; }
-.ios-glass:hover, .ios-glass-card:hover { border-color: rgba(215,173,106,.27) !important; }
-.totem-glow, .cyber-gold-glow, .cyber-turquoise-glow { text-shadow: none !important; }
+.ios-glass-card {
+  background: linear-gradient(150deg, rgba(32, 37, 52, .9), rgba(20, 23, 33, .82));
+}
+.ios-glass:hover,
+.ios-glass-card:hover {
+  border-color: rgba(212, 171, 106, .24);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
 
 input, select, textarea {
-  background-color: rgba(12,15,23,.62) !important;
-  border-color: rgba(255,255,255,.12) !important;
-  color: var(--ink) !important;
+  background-color: rgba(12, 15, 22, .6);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 14px;
 }
-input::placeholder, textarea::placeholder { color: #6f7687 !important; }
+input::placeholder, textarea::placeholder { color: var(--faint); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(212, 171, 106, .4);
+  box-shadow: 0 0 0 3px rgba(212, 171, 106, .14);
+}
 
-@keyframes ambient-drift { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(18px,-12px,0) scale(1.06); } }
+/* ─── Motion ────────────────────────────────────────────────────── */
+@keyframes ambient-drift { 0%, 100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(18px,-12px,0) scale(1.06); } }
 @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes soft-pulse { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
-.animate-pulse-totem { animation: soft-pulse 3s ease-in-out infinite; }
-.spring-transition { transition: all .35s cubic-bezier(.22,1,.36,1); }
-button { transition: transform .22s cubic-bezier(.22,1,.36,1), background .22s ease, border-color .22s ease, box-shadow .22s ease; }
-button:active { transform: scale(.975); }
-input:focus { box-shadow: 0 0 0 3px rgba(143,139,181,.2); }
+@keyframes soft-pulse { 0%, 100% { opacity: .62; } 50% { opacity: 1; } }
+.animate-pulse-totem { animation: soft-pulse 2.8s ease-in-out infinite; }
+.spring-transition { transition: all .35s cubic-bezier(.22, 1, .36, 1); }
+button { transition: transform .22s cubic-bezier(.22, 1, .36, 1), background .22s ease, border-color .22s ease, box-shadow .22s ease, color .22s ease; }
+button:active { transform: scale(.98); }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
-.text-red-400, .text-red-300, .text-red-200 { color: #e5937d !important; }
-.text-amber-400, .text-amber-300, .text-amber-200 { color: #dfbd7d !important; }
-.text-neutral-400, .text-neutral-300 { color: var(--muted) !important; }
-.bg-red-600 { background-color: var(--clay) !important; }
-.bg-black\/60, .bg-black\/95 { background-color: rgba(14,17,26,.84) !important; }
-.border-red-500\/30, .border-red-500\/20, .border-red-500\/40 { border-color: rgba(210,111,87,.38) !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }

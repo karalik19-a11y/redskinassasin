@@ -181,20 +181,20 @@ export const CyberTerminal: React.FC<CyberTerminalProps> = ({
   return (
     <div className="space-y-3 pb-20 select-none">
       {/* Terminal Window Frame */}
-      <div className="ios-glass p-3 rounded-2xl border border-red-500/30 font-mono text-xs shadow-2xl flex flex-col h-[520px]">
+      <div className="ios-glass p-3 rounded-[16px] border border-hair font-mono text-xs shadow-2xl flex flex-col h-[520px]">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
+        <div className="flex items-center justify-between border-b border-hair pb-2 mb-2">
           <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-red-500" />
+            <Terminal className="w-4 h-4 text-clay" />
             <span className="font-bold text-white text-[11px] tracking-wide">
               REDSKIN_CLI // ROOT@SHAMAN-CORE
             </span>
           </div>
 
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+            <span className="w-2.5 h-2.5 rounded-full bg-clay/80" />
+            <span className="w-2.5 h-2.5 rounded-full bg-gold-soft" />
+            <span className="w-2.5 h-2.5 rounded-full bg-sage-soft" />
           </div>
         </div>
 
@@ -205,12 +205,12 @@ export const CyberTerminal: React.FC<CyberTerminalProps> = ({
               key={log.id}
               className={`whitespace-pre-wrap break-words ${
                 log.type === 'input'
-                  ? 'text-amber-300 font-bold'
+                  ? 'text-gold font-bold'
                   : log.type === 'error'
-                  ? 'text-red-400 font-semibold'
+                  ? 'text-clay font-semibold'
                   : log.type === 'success'
-                  ? 'text-emerald-400 font-semibold'
-                  : 'text-neutral-300'
+                  ? 'text-sage font-semibold'
+                  : 'text-ink'
               }`}
             >
               {log.text}
@@ -220,18 +220,18 @@ export const CyberTerminal: React.FC<CyberTerminalProps> = ({
         </div>
 
         {/* Input prompt */}
-        <form onSubmit={handleCommand} className="mt-2 pt-2 border-t border-white/10 flex items-center space-x-2">
-          <span className="text-red-500 font-bold">&gt;</span>
+        <form onSubmit={handleCommand} className="mt-2 pt-2 border-t border-hair flex items-center space-x-2">
+          <span className="text-clay font-bold">&gt;</span>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="help, scan, dossier, decrypt..."
-            className="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-xs placeholder:text-neutral-600 focus:outline-none focus:border-red-500 font-mono"
+            className="flex-1 bg-panel border border-hair rounded-xl px-3 py-2 text-white text-xs placeholder:text-faint focus:outline-none focus:border-hair font-mono"
           />
           <button
             type="submit"
-            className="p-2 bg-red-600 hover:bg-red-500 text-white rounded-xl transition-colors shrink-0"
+            className="p-2 bg-clay hover:bg-clay text-white rounded-xl transition-colors shrink-0"
           >
             <Send className="w-3.5 h-3.5" />
           </button>

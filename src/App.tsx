@@ -128,11 +128,11 @@ export function App() {
                   onBackToSearch={() => setActiveTab('search')}
                 />
               ) : (
-                <div className="text-center py-20 text-neutral-400">
+                <div className="text-center py-20 text-muted">
                   <p>Досье не выбрано. Выполните поиск.</p>
                   <button
                     onClick={() => setActiveTab('search')}
-                    className="mt-4 px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold"
+                    className="mt-4 px-4 py-2 bg-clay text-white rounded-xl text-xs font-bold"
                   >
                     Перейти к поиску
                   </button>
@@ -144,7 +144,7 @@ export function App() {
               currentDossier ? (
                 <DreamcatcherGraph dossier={currentDossier} />
               ) : (
-                <div className="text-center py-20 text-neutral-400">
+                <div className="text-center py-20 text-muted">
                   Сначала выполните поиск объекта.
                 </div>
               )
