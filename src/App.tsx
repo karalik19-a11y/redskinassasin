@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { ShamanBackground } from './components/layout/ShamanBackground';
 import { IPhoneFrame } from './components/layout/IPhoneFrame';
-import { IPhoneStatusBar } from './components/layout/IPhoneStatusBar';
-import { DynamicIsland } from './components/layout/DynamicIsland';
 import { BottomNavBar } from './components/layout/BottomNavBar';
 import type { ActiveTab } from './components/layout/BottomNavBar';
 import { SearchHub } from './components/search/SearchHub';
@@ -102,31 +100,19 @@ export function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#020204] text-white flex flex-col items-center justify-center font-sans overflow-x-hidden selection:bg-red-500 selection:text-white">
-      {/* Background Animated Atmosphere */}
+    <div className="app-shell text-white overflow-x-hidden selection:bg-[#d26f57] selection:text-white">
       <ShamanBackground />
 
-      {/* Main iPhone Framework */}
+      {/* Responsive product shell — no device mockup, consistent on every platform. */}
       <IPhoneFrame
         isFrameEnabled={isFrameEnabled}
         onToggleFrame={() => setIsFrameEnabled(!isFrameEnabled)}
         isSoundEnabled={isSoundEnabled}
         onToggleSound={handleToggleSound}
       >
-        <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
-          {/* Top Fixed Header: iOS Status Bar + Dynamic Island */}
-          <div className="w-full shrink-0 z-40 bg-gradient-to-b from-black/90 via-black/60 to-transparent">
-            <IPhoneStatusBar />
-            <DynamicIsland
-              isScanning={isScanning}
-              scanProgress={85}
-              threatLevel={currentDossier?.threatLevel}
-              targetName={currentDossier?.fio.full}
-            />
-          </div>
-
-          {/* Main Scrollable Viewport */}
-          <main className="flex-1 w-full overflow-y-auto px-4 pt-2 no-scrollbar z-20">
+        <div className="relative flex min-h-[min(78vh,980px)] w-full flex-col overflow-hidden">
+          {/* Main scrollable workspace. Device chrome is intentionally omitted. */}
+          <main className="main-viewport flex-1 w-full overflow-y-auto px-4 pt-7 no-scrollbar z-20">
             {activeTab === 'search' && (
               <SearchHub
                 onSearch={handleSearch}
