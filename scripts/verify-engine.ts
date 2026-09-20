@@ -78,6 +78,10 @@ check('mod97("3214282912345698765432161182") = 1', mod97('3214282912345698765432
 check('IMEI 490154203237518 действителен (Luhn)', validateImei('490154203237518').isValid, true);
 check('Verhoeff: 236 действителен', isValidVerhoeff('236'), true);
 check('Verhoeff: 12345 недействителен', isValidVerhoeff('12345'), false);
+check('ICCID 8944501910220010388 действителен (Luhn)', validateIccid('8944501910220010388').isValid, true);
+check('ICCID 89014103211118510720 действителен (Luhn)', validateIccid('89014103211118510720').isValid, true);
+check('ICCID 8944501910220010387 недействителен (Luhn)', validateIccid('8944501910220010387').isValid, false);
+check('ICCID 8944501910220010388 → эмитент MCC 445', validateIccid('8944501910220010388').issuer, 'Telecom-эмитент (MCC 445)');
 
 // Российские идентификаторы
 check('ИНН ЮЛ 7707083893 действителен', validateInn('7707083893').isValid, true);

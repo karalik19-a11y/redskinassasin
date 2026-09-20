@@ -355,7 +355,7 @@ export const socialModule: OsintModule = {
   name: 'Кросс-платформенный поиск аккаунтов',
   category: 'social',
   description:
-    'Проверяет никнейм на 23 платформах: там, где есть публичный API (GitHub, GitLab, Reddit, Bluesky, Keybase, HN, npm, PyPI, Lichess, Chess.com, Codeberg, Docker Hub, Mastodon) — забирает реальные поля профиля; где API нет — выполняет probe с детекцией soft-404. Аватары и юзернеймы становятся узлами графа для кластеризации личностей.',
+    'Проверяет никнейм на 24 платформах: там, где есть публичный API (GitHub, GitLab, Reddit, Bluesky, Keybase, HN, npm, PyPI, Lichess, Chess.com, Codeberg, Docker Hub, Mastodon) — забирает реальные поля профиля; где API нет — выполняет probe с детекцией soft-404. Аватары и юзернеймы становятся узлами графа для кластеризации личностей.',
   accepts: ['username', 'alias', 'social_profile', 'email'],
   produces: ['social_profile', 'image', 'username', 'location', 'email'],
   requiresNetwork: true,
