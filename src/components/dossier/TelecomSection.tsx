@@ -20,15 +20,15 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
   return (
     <div className="space-y-3">
       {/* Phone Numbers with IMSI / IMEI / Tags */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/10 pb-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-3">
+        <div className="flex items-center justify-between border-b border-hair pb-2">
           <div className="flex items-center space-x-2">
-            <Phone className="w-4 h-4 text-red-400" />
+            <Phone className="w-4 h-4 text-clay" />
             <span className="text-xs font-bold text-white tracking-tight uppercase">
               Мобильные номера & Идентификаторы
             </span>
           </div>
-          <span className="text-[10px] font-mono text-amber-400 font-bold">
+          <span className="text-[10px] font-mono text-gold font-bold">
             {dossier.telecom.length} Линии
           </span>
         </div>
@@ -37,24 +37,24 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
           {dossier.telecom.map((tel, idx) => (
             <div
               key={idx}
-              className="bg-neutral-950/70 p-2.5 rounded-xl border border-white/5 space-y-2"
+              className="bg-panel p-2.5 rounded-xl border border-hair space-y-2"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="text-xs font-mono font-bold text-white tracking-wide">
                     {tel.number}
                   </span>
-                  <span className="text-[9px] px-1.5 py-0.2 bg-red-950/50 text-red-300 rounded border border-red-500/30 font-mono">
+                  <span className="text-[9px] px-1.5 py-0.2 bg-clay-soft text-clay rounded border border-hair font-mono">
                     {tel.operator}
                   </span>
                 </div>
 
                 <button
                   onClick={() => handleCopy(tel.number, `tel-${idx}`)}
-                  className="text-neutral-400 hover:text-white transition-colors"
+                  className="text-muted hover:text-white transition-colors"
                 >
                   {copiedKey === `tel-${idx}` ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-sage" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
                   )}
@@ -62,33 +62,33 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
               </div>
 
               {/* Hardware IMSI/IMEI */}
-              <div className="bg-black/50 p-2 rounded-lg text-[10px] font-mono text-neutral-400 space-y-0.5">
+              <div className="bg-panel p-2 rounded-lg text-[10px] font-mono text-muted space-y-0.5">
                 <div className="flex justify-between">
                   <span>IMSI:</span>
-                  <span className="text-neutral-300">{tel.imsi}</span>
+                  <span className="text-ink">{tel.imsi}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>IMEI:</span>
-                  <span className="text-amber-300/90">{tel.imei}</span>
+                  <span className="text-gold">{tel.imei}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Регион:</span>
-                  <span className="text-neutral-300">{tel.region}</span>
+                  <span className="text-ink">{tel.region}</span>
                 </div>
               </div>
 
               {/* Tags from Caller ID Leaks (GetContact) */}
               {tel.tags && tel.tags.length > 0 && (
                 <div className="space-y-1">
-                  <div className="text-[9px] font-mono text-neutral-400 uppercase flex items-center space-x-1">
-                    <Hash className="w-3 h-3 text-red-400" />
+                  <div className="text-[9px] font-mono text-muted uppercase flex items-center space-x-1">
+                    <Hash className="w-3 h-3 text-clay" />
                     <span>Теги в телефонных книгах (GetContact/NumBuster):</span>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {tel.tags.map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="px-2 py-0.5 bg-neutral-900 border border-white/10 rounded-md text-[9px] text-amber-200"
+                        className="px-2 py-0.5 bg-panel border border-hair rounded-md text-[9px] text-gold"
                       >
                         «{tag}»
                       </span>
@@ -103,52 +103,52 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
 
       {/* Telegram Intelligence Card */}
       {dossier.telegram && (
-        <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-2.5">
-          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+        <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2.5">
+          <div className="flex items-center justify-between border-b border-hair pb-2">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="w-4 h-4 text-sky-400" />
+              <MessageSquare className="w-4 h-4 text-violet-ink" />
               <span className="text-xs font-bold text-white tracking-tight uppercase">
                 Telegram Профиль & Слитые Чаты
               </span>
             </div>
-            <span className="text-[9px] font-mono text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-500/30">
+            <span className="text-[9px] font-mono text-violet-ink bg-violet-soft px-2 py-0.5 rounded-full border border-hair">
               ID: {dossier.telegram.id}
             </span>
           </div>
 
-          <div className="bg-neutral-950/70 p-2.5 rounded-xl border border-white/5 space-y-1.5">
+          <div className="bg-panel p-2.5 rounded-xl border border-hair space-y-1.5">
             <div className="flex items-center justify-between">
               <div className="text-xs font-bold text-white">
                 {dossier.telegram.firstName} {dossier.telegram.lastName || ''}{' '}
-                <span className="text-sky-400 font-mono">@{dossier.telegram.username}</span>
+                <span className="text-violet-ink font-mono">@{dossier.telegram.username}</span>
               </div>
-              <span className="text-[9px] font-mono text-amber-400 font-bold">
+              <span className="text-[9px] font-mono text-gold font-bold">
                 {dossier.telegram.leakedMessagesCount} слитых сообщений
               </span>
             </div>
 
             {dossier.telegram.bio && (
-              <p className="text-[11px] text-neutral-300 italic">«{dossier.telegram.bio}»</p>
+              <p className="text-[11px] text-ink italic">«{dossier.telegram.bio}»</p>
             )}
 
             {dossier.telegram.lastSeen && (
-              <div className="text-[10px] text-neutral-400">
+              <div className="text-[10px] text-muted">
                 Последний визит: {dossier.telegram.lastSeen}
               </div>
             )}
 
             {/* Leaked Groups */}
             <div className="pt-1 space-y-1">
-              <div className="text-[9px] font-mono text-neutral-400 uppercase">
+              <div className="text-[9px] font-mono text-muted uppercase">
                 Зафиксирован в закрытых группах / каналах:
               </div>
               <div className="space-y-1">
                 {dossier.telegram.groups.map((grp, gIdx) => (
                   <div
                     key={gIdx}
-                    className="flex items-center space-x-1.5 text-[10px] text-neutral-300 bg-black/40 px-2 py-1 rounded-md"
+                    className="flex items-center space-x-1.5 text-[10px] text-ink bg-panel px-2 py-1 rounded-md"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-soft" />
                     <span>{grp}</span>
                   </div>
                 ))}
@@ -161,16 +161,16 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
       {/* Emails & IP Traces */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {/* Emails */}
-        <div className="ios-glass p-3 rounded-2xl border border-white/10 space-y-1.5">
+        <div className="ios-glass p-3 rounded-[16px] border border-hair space-y-1.5">
           <div className="flex items-center space-x-1.5 text-xs font-bold text-white">
-            <Mail className="w-3.5 h-3.5 text-red-400" />
+            <Mail className="w-3.5 h-3.5 text-clay" />
             <span>Email адреса</span>
           </div>
           <div className="space-y-1">
             {dossier.emails.map((em, eIdx) => (
               <div
                 key={eIdx}
-                className="text-[10px] font-mono text-neutral-300 bg-neutral-950/80 p-1.5 rounded-lg border border-white/5 truncate"
+                className="text-[10px] font-mono text-ink bg-panel p-1.5 rounded-lg border border-hair truncate"
               >
                 {em}
               </div>
@@ -179,22 +179,22 @@ export const TelecomSection: React.FC<TelecomSectionProps> = ({ dossier }) => {
         </div>
 
         {/* IP logs */}
-        <div className="ios-glass p-3 rounded-2xl border border-white/10 space-y-1.5">
+        <div className="ios-glass p-3 rounded-[16px] border border-hair space-y-1.5">
           <div className="flex items-center space-x-1.5 text-xs font-bold text-white">
-            <Globe className="w-3.5 h-3.5 text-amber-400" />
+            <Globe className="w-3.5 h-3.5 text-gold" />
             <span>IP Активность & Провайдеры</span>
           </div>
           <div className="space-y-1">
             {dossier.ipAddresses.map((ipObj, iIdx) => (
               <div
                 key={iIdx}
-                className="text-[10px] font-mono text-neutral-300 bg-neutral-950/80 p-1.5 rounded-lg border border-white/5"
+                className="text-[10px] font-mono text-ink bg-panel p-1.5 rounded-lg border border-hair"
               >
-                <div className="flex justify-between font-bold text-amber-300">
+                <div className="flex justify-between font-bold text-gold">
                   <span>{ipObj.ip}</span>
-                  <span className="text-neutral-400 text-[9px]">{ipObj.city}</span>
+                  <span className="text-muted text-[9px]">{ipObj.city}</span>
                 </div>
-                <div className="text-[9px] text-neutral-400 truncate">{ipObj.isp}</div>
+                <div className="text-[9px] text-muted truncate">{ipObj.isp}</div>
               </div>
             ))}
           </div>

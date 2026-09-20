@@ -20,9 +20,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   return (
     <div className="space-y-3 pb-20 select-none">
       {/* Title */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-red-500/30">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair">
         <div className="flex items-center space-x-2">
-          <Sparkles className="w-4 h-4 text-amber-400" />
+          <Sparkles className="w-4 h-4 text-gold" />
           <span className="text-xs font-bold text-white uppercase tracking-tight">
             Опции & Настройки Системы
           </span>
@@ -30,20 +30,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* General Controls (iOS Switch Style) */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-3">
-        <div className="text-[10px] font-mono text-neutral-400 uppercase font-bold">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-3">
+        <div className="text-[10px] font-mono text-muted uppercase font-bold">
           Интерфейс & Тактильный отклик
         </div>
 
         {/* Sound Toggle */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="p-2 rounded-xl bg-gold-soft text-gold border border-hair">
               {isSoundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
             </div>
             <div>
               <div className="text-xs font-semibold text-white">Apple Haptic & Звуковые эффекты</div>
-              <div className="text-[10px] text-neutral-400">Синтез частот и тактильный отклик Web Audio</div>
+              <div className="text-[10px] text-muted">Синтез частот и тактильный отклик Web Audio</div>
             </div>
           </div>
 
@@ -53,7 +53,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onToggleSound();
             }}
             className={`w-12 h-6 rounded-full transition-colors relative p-0.5 ${
-              isSoundEnabled ? 'bg-red-600' : 'bg-neutral-800'
+              isSoundEnabled ? 'bg-clay' : 'bg-panel'
             }`}
           >
             <div
@@ -65,14 +65,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* Frame Toggle */}
-        <div className="flex items-center justify-between py-1 border-t border-white/5 pt-2">
+        <div className="flex items-center justify-between py-1 border-t border-hair pt-2">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20">
+            <div className="p-2 rounded-xl bg-clay/10 text-clay border border-hair">
               {isFrameEnabled ? <Smartphone className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </div>
             <div>
               <div className="text-xs font-semibold text-white">Компактность рабочей области</div>
-              <div className="text-[10px] text-neutral-400">Плотный или свободный ритм интерфейса</div>
+              <div className="text-[10px] text-muted">Плотный или свободный ритм интерфейса</div>
             </div>
           </div>
 
@@ -82,7 +82,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onToggleFrame();
             }}
             className={`w-12 h-6 rounded-full transition-colors relative p-0.5 ${
-              isFrameEnabled ? 'bg-red-600' : 'bg-neutral-800'
+              isFrameEnabled ? 'bg-clay' : 'bg-panel'
             }`}
           >
             <div
@@ -95,44 +95,44 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Database Index Info */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2">
         <div className="flex items-center space-x-2 text-xs font-bold text-white">
-          <Database className="w-4 h-4 text-emerald-400" />
+          <Database className="w-4 h-4 text-sage" />
           <span>Статистика Баз Данных и Реестров</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-          <div className="bg-neutral-950/70 p-2 rounded-xl border border-white/5">
-            <div className="text-[9px] text-neutral-400">ВСЕГО ЗАПИСЕЙ</div>
+          <div className="bg-panel p-2 rounded-xl border border-hair">
+            <div className="text-[9px] text-muted">ВСЕГО ЗАПИСЕЙ</div>
             <div className="text-white font-bold">4,820,914,200</div>
           </div>
-          <div className="bg-neutral-950/70 p-2 rounded-xl border border-white/5">
-            <div className="text-[9px] text-neutral-400">TELEGRAM СООБЩЕНИЙ</div>
-            <div className="text-amber-300 font-bold">142,500,000</div>
+          <div className="bg-panel p-2 rounded-xl border border-hair">
+            <div className="text-[9px] text-muted">TELEGRAM СООБЩЕНИЙ</div>
+            <div className="text-gold font-bold">142,500,000</div>
           </div>
-          <div className="bg-neutral-950/70 p-2 rounded-xl border border-white/5">
-            <div className="text-[9px] text-neutral-400">КРИПТО-ТРАНЗАКЦИЙ</div>
-            <div className="text-emerald-400 font-bold">89,140,200</div>
+          <div className="bg-panel p-2 rounded-xl border border-hair">
+            <div className="text-[9px] text-muted">КРИПТО-ТРАНЗАКЦИЙ</div>
+            <div className="text-sage font-bold">89,140,200</div>
           </div>
-          <div className="bg-neutral-950/70 p-2 rounded-xl border border-white/5">
-            <div className="text-[9px] text-neutral-400">ТОТЕМНЫХ ШТРАФОВ ГИБДД</div>
-            <div className="text-red-400 font-bold">210,400,000</div>
+          <div className="bg-panel p-2 rounded-xl border border-hair">
+            <div className="text-[9px] text-muted">ТОТЕМНЫХ ШТРАФОВ ГИБДД</div>
+            <div className="text-clay font-bold">210,400,000</div>
           </div>
         </div>
       </div>
 
       {/* GitHub Repository info & Deployment */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2">
         <div className="flex items-center space-x-2 text-xs font-bold text-white">
-          <GitBranch className="w-4 h-4 text-neutral-300" />
+          <GitBranch className="w-4 h-4 text-ink" />
           <span>GitHub & Развертывание</span>
         </div>
 
-        <p className="text-xs text-neutral-300 leading-relaxed">
+        <p className="text-xs text-ink leading-relaxed">
           Приложение полностью статическое и оптимизировано для мгновенного запуска через <b>GitHub Pages</b> или любую ссылку.
         </p>
 
-        <div className="bg-neutral-950/80 p-2.5 rounded-xl border border-white/5 text-[10px] font-mono text-amber-300 space-y-1">
+        <div className="bg-panel p-2.5 rounded-xl border border-hair text-[10px] font-mono text-gold space-y-1">
           <div>Репозиторий: karalik19-a11y/redskinassasin</div>
           <div>Поддержка PWA & Touch Gestures: АКТИВНО</div>
           <div>Шифрование сессии: ГОСТ Р 34.12-2015</div>
@@ -145,7 +145,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           sound.playHapticTap();
           onResetData();
         }}
-        className="w-full py-2.5 px-3 bg-red-950/40 hover:bg-red-900/50 border border-red-500/30 rounded-2xl text-xs font-bold text-red-300 flex items-center justify-center space-x-2 transition-all"
+        className="w-full py-2.5 px-3 bg-clay-soft hover:bg-clay-soft border border-hair rounded-[16px] text-xs font-bold text-clay flex items-center justify-center space-x-2 transition-all"
       >
         <RefreshCw className="w-3.5 h-3.5" />
         <span>Сбросить кэш и вернуть демо-цели</span>

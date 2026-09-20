@@ -20,15 +20,15 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
   return (
     <div className="space-y-3">
       {/* Primary Passports & Legal Docs */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-3">
-        <div className="flex items-center justify-between border-b border-white/10 pb-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-3">
+        <div className="flex items-center justify-between border-b border-hair pb-2">
           <div className="flex items-center space-x-2">
-            <ShieldCheck className="w-4 h-4 text-red-400" />
+            <ShieldCheck className="w-4 h-4 text-clay" />
             <span className="text-xs font-bold text-white tracking-tight uppercase">
               Паспортные данные & Госуслуги
             </span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-500/30">
+          <span className="text-[10px] font-mono text-sage font-semibold bg-sage-soft px-2 py-0.5 rounded-full border border-hair">
             ПРОВЕРЕНО МВД РФ
           </span>
         </div>
@@ -37,18 +37,18 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
           {dossier.documents.map((doc, idx) => (
             <div
               key={idx}
-              className="bg-neutral-950/70 p-2.5 rounded-xl border border-white/5 space-y-1.5"
+              className="bg-panel p-2.5 rounded-xl border border-hair space-y-1.5"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1.5">
-                  <FileCheck className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="text-xs font-bold text-neutral-200">{doc.type}</span>
+                  <FileCheck className="w-3.5 h-3.5 text-gold" />
+                  <span className="text-xs font-bold text-ink">{doc.type}</span>
                 </div>
                 <span
                   className={`text-[9px] font-mono px-1.5 py-0.2 rounded ${
                     doc.status === 'Действителен'
-                      ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-red-950/60 text-red-400 border border-red-500/30'
+                      ? 'bg-sage-soft text-sage border border-hair'
+                      : 'bg-clay-soft text-clay border border-hair'
                   }`}
                 >
                   {doc.status}
@@ -56,16 +56,16 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
               </div>
 
               {/* Number and copy */}
-              <div className="flex items-center justify-between bg-black/40 px-2.5 py-1.5 rounded-lg">
-                <span className="font-mono text-xs font-bold text-amber-300">
+              <div className="flex items-center justify-between bg-panel px-2.5 py-1.5 rounded-lg">
+                <span className="font-mono text-xs font-bold text-gold">
                   {doc.series ? `${doc.series} ` : ''}{doc.number}
                 </span>
                 <button
                   onClick={() => handleCopy(`${doc.series || ''} ${doc.number}`, `doc-${idx}`)}
-                  className="text-neutral-400 hover:text-white transition-colors"
+                  className="text-muted hover:text-white transition-colors"
                 >
                   {copiedKey === `doc-${idx}` ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-sage" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
                   )}
@@ -73,7 +73,7 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
               </div>
 
               {/* Details */}
-              <div className="text-[10px] text-neutral-400 space-y-0.5">
+              <div className="text-[10px] text-muted space-y-0.5">
                 {doc.issuedBy && <div>Кем выдан: {doc.issuedBy}</div>}
                 <div className="flex justify-between">
                   <span>Дата выдачи: {doc.issueDate}</span>
@@ -81,8 +81,8 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
                 </div>
                 {doc.extra &&
                   Object.entries(doc.extra).map(([k, v]) => (
-                    <div key={k} className="text-neutral-300 pt-0.5">
-                      <span className="text-neutral-400">{k}:</span> {v}
+                    <div key={k} className="text-ink pt-0.5">
+                      <span className="text-muted">{k}:</span> {v}
                     </div>
                   ))}
               </div>
@@ -94,51 +94,51 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({ dossier }) => 
       {/* Tax & Social Security Identifiers */}
       <div className="grid grid-cols-2 gap-2">
         {/* INN */}
-        <div className="ios-glass p-3 rounded-2xl border border-white/10 space-y-1">
-          <div className="text-[10px] font-mono text-neutral-400 uppercase">ИНН Физлица</div>
+        <div className="ios-glass p-3 rounded-[16px] border border-hair space-y-1">
+          <div className="text-[10px] font-mono text-muted uppercase">ИНН Физлица</div>
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs font-bold text-white tracking-wider">
               {dossier.finances.taxId}
             </span>
             <button
               onClick={() => handleCopy(dossier.finances.taxId, 'inn')}
-              className="text-neutral-400 hover:text-white"
+              className="text-muted hover:text-white"
             >
-              {copiedKey === 'inn' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedKey === 'inn' ? <Check className="w-3.5 h-3.5 text-sage" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
-          <div className="text-[9px] text-emerald-400 font-mono">ФНС: Активен</div>
+          <div className="text-[9px] text-sage font-mono">ФНС: Активен</div>
         </div>
 
         {/* SNILS */}
-        <div className="ios-glass p-3 rounded-2xl border border-white/10 space-y-1">
-          <div className="text-[10px] font-mono text-neutral-400 uppercase">СНИЛС</div>
+        <div className="ios-glass p-3 rounded-[16px] border border-hair space-y-1">
+          <div className="text-[10px] font-mono text-muted uppercase">СНИЛС</div>
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs font-bold text-white tracking-wider">
               {dossier.finances.snils}
             </span>
             <button
               onClick={() => handleCopy(dossier.finances.snils, 'snils')}
-              className="text-neutral-400 hover:text-white"
+              className="text-muted hover:text-white"
             >
-              {copiedKey === 'snils' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedKey === 'snils' ? <Check className="w-3.5 h-3.5 text-sage" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
-          <div className="text-[9px] text-emerald-400 font-mono">СФР: Подтвержден</div>
+          <div className="text-[9px] text-sage font-mono">СФР: Подтвержден</div>
         </div>
       </div>
 
       {/* Address History / Registration */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-white/10 space-y-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2">
         <div className="flex items-center space-x-2 text-xs font-bold text-white">
-          <MapPin className="w-4 h-4 text-red-400" />
+          <MapPin className="w-4 h-4 text-clay" />
           <span>Адреса постоянной регистрации и проживания</span>
         </div>
 
-        <div className="bg-neutral-950/70 p-2.5 rounded-xl border border-white/5 text-xs text-neutral-200">
-          <div className="text-[10px] text-amber-400 font-mono mb-1">ТЕКУЩАЯ ПРОПИСКА</div>
+        <div className="bg-panel p-2.5 rounded-xl border border-hair text-xs text-ink">
+          <div className="text-[10px] text-gold font-mono mb-1">ТЕКУЩАЯ ПРОПИСКА</div>
           <div className="font-medium">{dossier.assets.realEstate[0]?.address || dossier.birthPlace}</div>
-          <div className="text-[10px] text-neutral-400 mt-1">
+          <div className="text-[10px] text-muted mt-1">
             Кадастровый номер: {dossier.assets.realEstate[0]?.cadastralNumber || '77:01:0001024:810'}
           </div>
         </div>

@@ -79,38 +79,38 @@ export function getThreatBadgeColor(level: string): { bg: string; border: string
   switch (level) {
     case 'CRITICAL':
       return {
-        bg: 'bg-red-950/60',
-        border: 'border-red-500/80',
-        text: 'text-red-400',
-        glow: 'shadow-[0_0_15px_rgba(239,68,68,0.5)]',
+        bg: 'bg-clay-soft',
+        border: 'border-hair',
+        text: 'text-clay',
+        glow: 'shadow-[0_10px_30px_rgba(0,0,0,.28)]',
       };
     case 'HIGH':
       return {
         bg: 'bg-orange-950/60',
         border: 'border-orange-500/80',
         text: 'text-orange-400',
-        glow: 'shadow-[0_0_15px_rgba(249,115,22,0.4)]',
+        glow: 'shadow-[0_10px_30px_rgba(0,0,0,.28)]',
       };
     case 'ELEVATED':
       return {
-        bg: 'bg-amber-950/60',
-        border: 'border-amber-500/80',
-        text: 'text-amber-400',
-        glow: 'shadow-[0_0_15px_rgba(245,158,11,0.3)]',
+        bg: 'bg-gold-soft',
+        border: 'border-hair',
+        text: 'text-gold',
+        glow: 'shadow-[0_10px_30px_rgba(0,0,0,.28)]',
       };
     case 'GUARDED':
       return {
-        bg: 'bg-cyan-950/60',
-        border: 'border-cyan-500/80',
-        text: 'text-cyan-400',
-        glow: 'shadow-[0_0_15px_rgba(6,182,212,0.3)]',
+        bg: 'bg-violet-soft',
+        border: 'border-hair',
+        text: 'text-violet-ink',
+        glow: 'shadow-[0_10px_30px_rgba(0,0,0,.28)]',
       };
     default:
       return {
-        bg: 'bg-emerald-950/60',
-        border: 'border-emerald-500/80',
-        text: 'text-emerald-400',
-        glow: 'shadow-[0_0_15px_rgba(16,185,129,0.3)]',
+        bg: 'bg-sage-soft',
+        border: 'border-hair',
+        text: 'text-sage',
+        glow: 'shadow-[0_10px_30px_rgba(0,0,0,.28)]',
       };
   }
 }

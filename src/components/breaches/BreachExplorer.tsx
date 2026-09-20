@@ -98,20 +98,20 @@ export const BreachExplorer: React.FC = () => {
   return (
     <div className="space-y-3 pb-20 select-none">
       {/* Header */}
-      <div className="ios-glass p-3.5 rounded-2xl border border-red-500/30 space-y-2">
+      <div className="ios-glass p-3.5 rounded-[16px] border border-hair space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Radio className="w-4 h-4 text-red-500 animate-pulse" />
+            <Radio className="w-4 h-4 text-clay animate-pulse" />
             <span className="text-xs font-bold text-white uppercase tracking-tight">
               Дымовые Сигналы // Сканер Баз Утечек
             </span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-500/30">
+          <span className="text-[10px] font-mono text-sage font-bold bg-sage-soft px-2 py-0.5 rounded-full border border-hair">
             4.8 МЛРД ЗАПИСЕЙ
           </span>
         </div>
 
-        <p className="text-[11px] text-neutral-300">
+        <p className="text-[11px] text-ink">
           Каталог проиндексированных утечек баз данных для мгновенного сопоставления связей и верификации досье.
         </p>
 
@@ -122,9 +122,9 @@ export const BreachExplorer: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Поиск по реестрам (Яндекс, СДЭК, Альфа, ФСБ...)"
-            className="w-full px-3.5 py-2 bg-neutral-950/80 border border-white/10 rounded-xl text-white text-xs placeholder:text-neutral-600 focus:outline-none focus:border-red-500"
+            className="w-full px-3.5 py-2 bg-panel border border-hair rounded-xl text-white text-xs placeholder:text-faint focus:outline-none focus:border-hair"
           />
-          <Search className="absolute right-3 top-3 w-4 h-4 text-neutral-500 pointer-events-none" />
+          <Search className="absolute right-3 top-3 w-4 h-4 text-muted pointer-events-none" />
         </div>
       </div>
 
@@ -133,26 +133,26 @@ export const BreachExplorer: React.FC = () => {
         {filteredCatalog.map((db) => (
           <div
             key={db.id}
-            className="ios-glass p-3 rounded-2xl border border-white/5 space-y-2 hover:border-red-500/30 transition-colors"
+            className="ios-glass p-3 rounded-[16px] border border-hair space-y-2 hover:border-hair transition-colors"
           >
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-xs font-bold text-white flex items-center space-x-1.5">
-                  <Database className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  <Database className="w-3.5 h-3.5 text-clay shrink-0" />
                   <span>{db.source}</span>
                 </div>
-                <div className="text-[10px] text-amber-400/90 font-mono mt-0.5">
+                <div className="text-[10px] text-gold font-mono mt-0.5">
                   {db.category} • {db.date}
                 </div>
               </div>
 
-              <span className="text-[9px] font-mono text-emerald-400 bg-emerald-950/40 px-1.5 py-0.2 rounded border border-emerald-500/30 whitespace-nowrap">
+              <span className="text-[9px] font-mono text-sage bg-sage-soft px-1.5 py-0.2 rounded border border-hair whitespace-nowrap">
                 {db.status}
               </span>
             </div>
 
-            <div className="flex items-center justify-between text-[10px] bg-black/40 px-2.5 py-1.5 rounded-lg font-mono">
-              <span className="text-neutral-400">Количество строк:</span>
+            <div className="flex items-center justify-between text-[10px] bg-panel px-2.5 py-1.5 rounded-lg font-mono">
+              <span className="text-muted">Количество строк:</span>
               <span className="text-white font-bold">{db.recordsCount}</span>
             </div>
 
@@ -161,7 +161,7 @@ export const BreachExplorer: React.FC = () => {
               {db.sampleFields.map((field, fIdx) => (
                 <span
                   key={fIdx}
-                  className="px-1.5 py-0.2 bg-white/5 rounded text-[9px] text-neutral-300 border border-white/5 font-mono"
+                  className="px-1.5 py-0.2 bg-white/5 rounded text-[9px] text-ink border border-hair font-mono"
                 >
                   {field}
                 </span>
